@@ -2,7 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import authRoute from'./routes
+import authRoute from './routes/auth.js'
 
 const app = express()
 dotenv.config()

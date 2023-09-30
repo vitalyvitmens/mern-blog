@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import { getMe, login, register } from '../controllers'
+import { register, login, getMe } from '../controllers/auth.js'
 
-export const router = new Router()
+const router = new Router()
 
 // Register
 router.post('/register', register)
@@ -11,3 +11,5 @@ router.post('/login', login)
 
 // Get Me
 router.get('/me', getMe)
+
+export default router
