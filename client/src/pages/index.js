@@ -1,0 +1,7 @@
+export * from './AddPostPage'
+export * from './EditPostPage'
+export * from './LoginPage'
+export * from './MainPage'
+export * from './PostPage'
+export * from './PostsPage'
+export * from './RegisterPage'
