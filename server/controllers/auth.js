@@ -1,57 +1,65 @@
-import User from '../models/User.js'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import User from "../models/User.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // Register user
 export const register = async (req, res) => {
   try {
-    const { username, password } = req.body
+    const { username, password } = req.body;
 
-    const isUsed = await User.findOne({ username })
+    const isUsed = await User.findOne({ username });
 
     if (isUsed) {
       // return res.status(402).json({
       return res.json({
-        message: 'Данный пользователь уже занят',
-      })
+        message: "Данный пользователь уже занят",
+      });
     }
 
-    const salt = bcrypt.genSaltSync(10)
-    const hash = bcrypt.hashSync(password, salt)
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
 
     const newUser = new User({
       username,
       password: hash,
-    })
+    });
 
-    await newUser.save()
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
+
+    await newUser.save();
 
     res.json({
       newUser,
-      message: 'Регистрация прошла успешно',
-    })
+      message: "Регистрация прошла успешно",
+    });
   } catch (error) {
-    res.json({ message: 'Ошибка при создании пользователя' })
+    res.json({ message: "Ошибка при создании пользователя" });
   }
-}
+};
 
 // Login user
 export const login = async (req, res) => {
   try {
-    const { username, password } = req.body
+    const { username, password } = req.body;
 
-    const user = await User.findOne({ username })
+    const user = await User.findOne({ username });
 
     if (!user) {
-      return res.json({ message: 'Такого пользователя не существует' })
+      return res.json({ message: "Такого пользователя не существует" });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password)
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
       return res.json({
-        message: 'Неверный пароль',
-      })
+        message: "Неверный пароль",
+      });
     }
 
     const token = jwt.sign(
@@ -59,28 +67,28 @@ export const login = async (req, res) => {
         id: user._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '30d' }
-    )
+      { expiresIn: "30d" }
+    );
 
     res.json({
       token,
       user,
-      message: 'Вы вошли в систему',
-    })
+      message: "Вы вошли в систему",
+    });
   } catch (error) {
-    res.json({ message: 'Ошибка при авторизации' })
+    res.json({ message: "Ошибка при авторизации" });
   }
-}
+};
 
 // Get Me
 export const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.userId)
+    const user = await User.findById(req.userId);
 
     if (!user) {
       return res.json({
-        message: 'Такого пользователя не существует',
-      })
+        message: "Такого пользователя не существует",
+      });
     }
 
     const token = jwt.sign(
@@ -88,16 +96,16 @@ export const getMe = async (req, res) => {
         id: user._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '30d' }
-    )
+      { expiresIn: "30d" }
+    );
 
     res.json({
       user,
       token,
-    })
+    });
   } catch (error) {
     res.json({
-      message: 'Нет доступа',
-    })
+      message: "Нет доступа",
+    });
   }
-}
+};
