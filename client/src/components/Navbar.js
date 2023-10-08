@@ -1,12 +1,13 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { checkIsAuth, logout } from '../redux/features/auth/authSlice'
 import { toast } from 'react-toastify'
 
 export const Navbar = () => {
 	const isAuth = useSelector(checkIsAuth)
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	const activeStyles = {
 		color: 'white',
@@ -14,6 +15,7 @@ export const Navbar = () => {
 
 	const logoutHandler = () => {
 		dispatch(logout())
+		navigate('/')
 		window.localStorage.removeItem('token')
 		toast('Вы вышли из системы')
 	}
