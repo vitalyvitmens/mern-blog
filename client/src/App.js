@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Layout } from './components'
 import { Routes, Route } from 'react-router-dom'
 import {
@@ -9,8 +11,17 @@ import {
 	PostsPage,
 	RegisterPage,
 } from './pages'
+import { ToastContainer } from 'react-toastify'
+import { getMe } from './redux/features/auth/authSlice'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch(getMe())
+	}, [])
+
 	return (
 		<Layout>
 			<Routes>
@@ -22,6 +33,8 @@ function App() {
 				<Route path="register" element={<RegisterPage />} />
 				<Route path="login" element={<LoginPage />} />
 			</Routes>
+
+			<ToastContainer position="bottom-right" />
 		</Layout>
 	)
 }
