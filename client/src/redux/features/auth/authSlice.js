@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from '../../../utils/axios'
 
 const initialState = {
@@ -16,11 +16,9 @@ export const registerUser = createAsyncThunk(
 				username,
 				password,
 			})
-
 			if (data.token) {
 				window.localStorage.setItem('token', data.token)
 			}
-
 			return data
 		} catch (error) {
 			console.log(error)
@@ -36,11 +34,9 @@ export const loginUser = createAsyncThunk(
 				username,
 				password,
 			})
-
 			if (data.token) {
 				window.localStorage.setItem('token', data.token)
 			}
-
 			return data
 		} catch (error) {
 			console.log(error)
@@ -51,7 +47,6 @@ export const loginUser = createAsyncThunk(
 export const getMe = createAsyncThunk('auth/loginUser', async () => {
 	try {
 		const { data } = await axios.get('/auth/me')
-
 		return data
 	} catch (error) {
 		console.log(error)
@@ -62,7 +57,12 @@ export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-		logout: (state) => (state = initialState),
+		logout: (state) => {
+			state.user = null
+			state.token = null
+			state.isLoading = false
+			state.status = null
+		},
 	},
 	extraReducers: {
 		// Register user
@@ -95,7 +95,7 @@ export const authSlice = createSlice({
 			state.status = action.payload.message
 			state.isLoading = false
 		},
-		// Get me (проверка авторизации)
+		// Проверка авторизации
 		[getMe.pending]: (state) => {
 			state.isLoading = true
 			state.status = null
