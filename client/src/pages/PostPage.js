@@ -10,6 +10,7 @@ import {
 	AiFillDelete,
 } from 'react-icons/ai'
 import Moment from 'react-moment'
+import 'moment/locale/ru'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -106,7 +107,7 @@ export const PostPage = () => {
 					<div className="flex justify-between items-center pt-2">
 						<div className="text-xs text-white opacity-50">{post.username}</div>
 						<div className="text-xs text-white opacity-50">
-							<Moment date={post.createdAt} format="D MMM YYYY" />
+							<Moment date={post.createdAt} format="DD MMMM YYYYг HH:mm" />
 						</div>
 					</div>
 					<div className="text-white text-xl">{post.title}</div>
